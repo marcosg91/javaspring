@@ -3,6 +3,7 @@ package com.info.librosprimeraapp.controller;
 import com.info.librosprimeraapp.domain.Author;
 import com.info.librosprimeraapp.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/author")
 public class AuthorController {
-    private final AuthorService authorService;
+    @Qualifier("AuthorServicePrincipal")
+    AuthorService authorService;
 
     @Autowired
     public AuthorController(AuthorService authorService) {
