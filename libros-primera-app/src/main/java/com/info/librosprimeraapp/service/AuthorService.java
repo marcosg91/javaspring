@@ -1,3 +1,4 @@
+// AuthorService.java
 package com.info.librosprimeraapp.service;
 
 import com.info.librosprimeraapp.domain.Author;
@@ -14,6 +15,8 @@ public interface AuthorService {
     Optional<Author> findAuthorById(UUID authorId);
 
     Optional<Author> findAuthorByNombreAndApellido(String nombre, String apellido);
+
+    Optional<Author> updateAuthor(UUID authorId, Author author);
 
     boolean deleteAuthor(UUID authorId);
 }

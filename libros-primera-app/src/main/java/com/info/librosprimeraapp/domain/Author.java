@@ -1,36 +1,30 @@
+// Author.java
 package com.info.librosprimeraapp.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Setter
-@Getter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "authors")
 public class Author {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @GeneratedValue
     private UUID id;
 
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String apellido;
 
-    @Column(nullable = false)
-    private LocalDate fechaNacimiento;
+    @Column(name = "fecha_nacimiento", nullable = false) // Actualización del nombre de la columna
+    private LocalDate fechaDeNacimiento;
 }
