@@ -42,6 +42,11 @@ public class AuthorServiceJPAImpl implements AuthorService {
     }
 
     @Override
+    public Optional<Author> findAuthorByNombreAndApellido(String fullName) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Author> updateAuthor(UUID authorId, Author authorUpdated) {
         return Optional.empty();
     }
