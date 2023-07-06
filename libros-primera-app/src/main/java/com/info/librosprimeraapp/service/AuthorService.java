@@ -16,6 +16,8 @@ public interface AuthorService {
 
     Optional<Author> findAuthorByNombreAndApellido(String nombre, String apellido);
 
+    Optional<Author> findAuthorByNombreAndApellido(String fullName);
+
     Optional<Author> updateAuthor(UUID authorId, Author author);
 
     boolean deleteAuthor(UUID authorId);
