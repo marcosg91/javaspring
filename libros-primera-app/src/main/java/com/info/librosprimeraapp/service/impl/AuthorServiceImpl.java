@@ -40,6 +40,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public Optional<Author> findAuthorByNombreAndApellido(String fullName) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Author> updateAuthor(UUID authorId, Author author) {
         return authorRepository.findById(authorId).map(existingAuthor -> {
             existingAuthor.setNombre(author.getNombre());
