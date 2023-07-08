@@ -1,3 +1,5 @@
+//BookServiceJPAImpl.java: se conecta a una base de datos = mysql
+
 package com.info.librosprimeraapp.service.impl;
 
 import com.info.librosprimeraapp.domain.Book;

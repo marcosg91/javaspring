@@ -34,5 +34,10 @@ public class Book {
 
     @Column(length = 40, columnDefinition = "varchar(40)",updatable = true, nullable = false)
     private String author;
+
+    @Column(unique = true) //para que no pueda haber libros con el mismo isbn
+    private String isbn;
+
+    private int numberPage;
 }
 

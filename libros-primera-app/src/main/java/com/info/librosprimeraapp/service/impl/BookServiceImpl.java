@@ -1,3 +1,5 @@
+//BookServiceImpl.java: no se conecta a una base de datos
+
 package com.info.librosprimeraapp.service.impl;
 
 import com.info.librosprimeraapp.domain.Book;

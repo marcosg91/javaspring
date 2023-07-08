@@ -1,7 +1,10 @@
+//BookController.java: se comunica con el Service
+
 package com.info.librosprimeraapp.controller;
 
 import com.info.librosprimeraapp.domain.Book;
 import com.info.librosprimeraapp.service.BookService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,8 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RestController
+@RestController //anotacion a nivel de clase
 @RequestMapping("/api/v1/book")
+@Slf4j
+
 public class BookController {
     // IoC inversion de control
     @Qualifier("BookServicePrincipal")
@@ -27,12 +32,14 @@ public class BookController {
     // get---> obtener todos los libros
     @GetMapping
     public List<Book> getAllBooks() {
+        log.info("consultar todos los libros");
         return bookService.getAllBooks();
     }
 
     // post---> crear un libro
     @PostMapping
     public Book createBook(@RequestBody Book book) {
+        log.info("nuevo libro");
         return bookService.createBook(book);
     }
 
@@ -53,10 +60,10 @@ public class BookController {
         Optional<Book> book = bookService.updateBook(idBook, bookUpdated);
 
         if (!book.isPresent()) {
-            System.out.println("libro no encontrado");
+            log.info("libro no encontrado");
             return "libro no encontrado";
         } else {
-            System.out.println("libro actualizado");
+            log.info("libro actualizado");
             return "/api/v1/book/" + book.get().getUuid();
         }
     }
@@ -66,8 +73,10 @@ public class BookController {
     public ResponseEntity<String> deleteBook(@PathVariable("title") String title) {
         boolean deleted = bookService.deleteBookByName(title);
         if (deleted) {
+            log.info("libro eliminado");
             return ResponseEntity.ok("libro eliminado correctamente");
         } else {
+            log.info("libro no encontrado");
             return ResponseEntity.notFound().build();
         }
     }
