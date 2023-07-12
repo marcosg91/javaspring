@@ -11,9 +11,11 @@ public interface BookService {
 
     Book createBook(Book book);
 
-    Book findBookByTitle(String title);
+    Optional<Book> findBookByTitle(String title);
 
     Optional<Book> updateBook(UUID uuidBook, Book bookUpdated);
 
     boolean deleteBookByName(String title);
+
+    Optional<Book> getBookById(UUID uuid);
 }

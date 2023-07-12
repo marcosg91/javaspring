@@ -41,12 +41,12 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
-    // Agregar implementación para el método findBookByTitle()
+    // agregar implementación para el método findBookByTitle()
     @Override
-    public Book findBookByTitle(String title) {
+    public Optional<Book> findBookByTitle(String title) {
         for (Book book : bookMap.values()) {
             if (book.getTitle().equalsIgnoreCase(title)) {
-                return book;
+                return Optional.of(book);
             }
         }
         return null;
@@ -82,5 +82,10 @@ public class BookServiceImpl implements BookService {
             }
         }
         return (bookToDelete != null) ? bookMap.remove(bookToDelete.getUuid()) != null : false;
+    }
+
+    @Override
+    public Optional<Book> getBookById(UUID uuid) {
+        return Optional.of(bookMap.get(uuid));
     }
 }

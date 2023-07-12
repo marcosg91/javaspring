@@ -30,13 +30,12 @@ public class BookServiceJPAImpl implements BookService {
     @Override
     public Book createBook(Book book) {
         book.setUuid(UUID.randomUUID());
-        bookRepository.save(book);//guardar en base de datos
-        return book;
+        return bookRepository.save(book);//guardar en base de datos
     }
 
     @Override
-    public Book findBookByTitle(String title) {
-        return null;
+    public Optional<Book> findBookByTitle(String title) {
+        return bookRepository.findBookByTitleEqualsIgnoreCase(title);
     }
 
     @Override
@@ -70,5 +69,11 @@ public class BookServiceJPAImpl implements BookService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<Book> getBookById(UUID uuid) {
+
+        return Optional.of(bookRepository.findById(uuid)).orElse(null);
     }
 }
