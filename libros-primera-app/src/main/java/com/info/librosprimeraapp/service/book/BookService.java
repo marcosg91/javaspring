@@ -1,4 +1,4 @@
-package com.info.librosprimeraapp.service;
+package com.info.librosprimeraapp.service.book;
 
 import com.info.librosprimeraapp.domain.Book;
 

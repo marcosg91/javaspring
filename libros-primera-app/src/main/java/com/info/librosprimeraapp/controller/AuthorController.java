@@ -2,7 +2,7 @@
 package com.info.librosprimeraapp.controller;
 
 import com.info.librosprimeraapp.domain.Author;
-import com.info.librosprimeraapp.service.AuthorService;
+import com.info.librosprimeraapp.service.author.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

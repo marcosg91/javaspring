@@ -1,5 +1,5 @@
 // AuthorService.java
-package com.info.librosprimeraapp.service;
+package com.info.librosprimeraapp.service.author;
 
 import com.info.librosprimeraapp.domain.Author;
 

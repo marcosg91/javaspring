@@ -1,20 +1,22 @@
-// AuthorServiceImpl.java
-package com.info.librosprimeraapp.service.impl;
+// AuthorServiceJPAImpl.java
+package com.info.librosprimeraapp.service.author.impl;
 
 import com.info.librosprimeraapp.domain.Author;
 import com.info.librosprimeraapp.repository.author.AuthorRepository;
-import com.info.librosprimeraapp.service.AuthorService;
+import com.info.librosprimeraapp.service.author.AuthorService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Primary
 @Service
-public class AuthorServiceImpl implements AuthorService {
+public class AuthorServiceJPAImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    public AuthorServiceJPAImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
 
@@ -45,20 +47,17 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> updateAuthor(UUID authorId, Author author) {
-        return authorRepository.findById(authorId).map(existingAuthor -> {
-            existingAuthor.setNombre(author.getNombre());
-            existingAuthor.setApellido(author.getApellido());
-            existingAuthor.setFechaDeNacimiento(author.getFechaDeNacimiento());
-            return authorRepository.save(existingAuthor);
-        });
+    public Optional<Author> updateAuthor(UUID authorId, Author authorUpdated) {
+        return Optional.empty();
     }
 
     @Override
     public boolean deleteAuthor(UUID authorId) {
-        return authorRepository.findById(authorId).map(author -> {
-            authorRepository.delete(author);
+        Optional<Author> authorOptional = authorRepository.findById(authorId);
+        if (authorOptional.isPresent()) {
+            authorRepository.delete(authorOptional.get());
             return true;
-        }).orElse(false);
+        }
+        return false;
     }
 }

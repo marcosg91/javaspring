@@ -3,7 +3,7 @@
 package com.info.librosprimeraapp.controller;
 
 import com.info.librosprimeraapp.domain.Book;
-import com.info.librosprimeraapp.service.BookService;
+import com.info.librosprimeraapp.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

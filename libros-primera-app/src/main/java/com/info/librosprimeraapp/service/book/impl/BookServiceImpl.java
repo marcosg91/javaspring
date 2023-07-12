@@ -1,9 +1,9 @@
 //BookServiceImpl.java: no se conecta a una base de datos
 
-package com.info.librosprimeraapp.service.impl;
+package com.info.librosprimeraapp.service.book.impl;
 
 import com.info.librosprimeraapp.domain.Book;
-import com.info.librosprimeraapp.service.BookService;
+import com.info.librosprimeraapp.service.book.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

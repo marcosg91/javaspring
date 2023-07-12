@@ -1,10 +1,10 @@
 //BookServiceJPAImpl.java: se conecta a una base de datos = mysql
 
-package com.info.librosprimeraapp.service.impl;
+package com.info.librosprimeraapp.service.book.impl;
 
 import com.info.librosprimeraapp.domain.Book;
 import com.info.librosprimeraapp.repository.book.BookRepository;
-import com.info.librosprimeraapp.service.BookService;
+import com.info.librosprimeraapp.service.book.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
