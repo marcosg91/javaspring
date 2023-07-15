@@ -1,14 +1,20 @@
-//BookServiceJPAImpl.java: se conecta a una base de datos = mysql
+// BookServiceJPAImpl.java
 
 package com.info.librosprimeraapp.service.book.impl;
 
+import com.info.librosprimeraapp.domain.Author;
 import com.info.librosprimeraapp.domain.Book;
+import com.info.librosprimeraapp.exceptions.NotFoundException;
+import com.info.librosprimeraapp.mapper.book.BookMapper;
+import com.info.librosprimeraapp.model.dto.book.BookDTO;
+import com.info.librosprimeraapp.repository.author.AuthorRepository;
 import com.info.librosprimeraapp.repository.book.BookRepository;
 import com.info.librosprimeraapp.service.book.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,64 +22,97 @@ import java.util.UUID;
 @Primary
 @Service
 @AllArgsConstructor
-
 public class BookServiceJPAImpl implements BookService {
-
 
     private final BookRepository bookRepository;
 
+    private final BookMapper bookMapper;
+    private final AuthorRepository authorRepository;
+
+
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();//traer todos los libros
+    public List<BookDTO> getAllBooks() {
+
+        List<BookDTO> bookDTOS = new ArrayList<>();
+
+        for (Book book:bookRepository.findAll()) {
+            bookDTOS.add(bookMapper.bookToBookDTO(book));
+        }
+
+        return bookDTOS;
     }
 
     @Override
-    public Book createBook(Book book) {
-        book.setUuid(UUID.randomUUID());
-        return bookRepository.save(book);//guardar en base de datos
+    public Book createBook(BookDTO book) throws NotFoundException {
+
+        Book newBook = bookMapper.bookDTOtoBook(book);
+
+        Optional<Author> author = authorRepository.findById(UUID.fromString(book.getIdAuthor()));
+
+        if (author.isPresent()){
+            newBook.setAuthor(author.get());
+            return bookRepository.save(newBook);
+        }else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
-    public Optional<Book> findBookByTitle(String title) {
-        return bookRepository.findBookByTitleEqualsIgnoreCase(title);
-    }
-
-    @Override
-    public Optional<Book> updateBook(UUID uuidBook, Book bookUpdated) {
-        //buscar libro por id
+    public Optional<BookDTO> updateBook(UUID uuidBook, BookDTO bookUpdated) {
+        //Buscar libro por ID
         Optional<Book> bookOptional = bookRepository.findById(uuidBook);
 
-        if (bookOptional.isPresent()) {
-            updatingBook(bookOptional.get(), bookUpdated);
-            //save ----> si existe entonces lo actualiza y si no existe lo crea
-            return Optional.of(bookRepository.save(bookOptional.get()));
-        } else {
+        if(bookOptional.isPresent()){
+            updatingBook(bookOptional.get(),bookUpdated);
+            //Save --> Si existe entonces lo actualiza y sino lo crea.
+            bookRepository.saveAndFlush(bookOptional.get());
+            return Optional.of(bookMapper.bookToBookDTO(bookOptional.get()));
+        }else {
             return Optional.empty();
         }
     }
 
-    private void updatingBook(Book book, Book bookUpdated) {
-        if (bookUpdated.getTitle() != null) {
+    private void updatingBook(Book book,BookDTO bookUpdated){
+
+        if (!bookUpdated.getTitle().isBlank()){
             book.setTitle(bookUpdated.getTitle());
         }
-        if (bookUpdated.getAuthor() != null) {
-            book.setAuthor(bookUpdated.getAuthor());
+
+        if (!bookUpdated.getIdAuthor().isBlank()){
+            Optional<Author> author = authorRepository.findById(UUID.fromString(bookUpdated.getIdAuthor()));
+
+            if (author.isPresent()){
+                book.setAuthor(author.get());
+            }
         }
+
+        if(bookUpdated.getNumberPages() > 0){
+            book.setNumberPages(bookUpdated.getNumberPages());
+        }
+
+        if (!bookUpdated.getIsbn().isBlank()){
+            book.setIsbn(bookUpdated.getIsbn());
+        }
+
     }
 
-
-    public boolean deleteBookByName(String title) {
-        Optional<Book> bookOptional = bookRepository.findBookByTitleEqualsIgnoreCase(title);
-        if (bookOptional.isPresent()) {
-            bookRepository.delete(bookOptional.get());
+    @Override
+    public boolean deleteBook(UUID uuidBook) {
+        if (bookRepository.existsById(uuidBook)){
+            bookRepository.deleteById(uuidBook);
             return true;
         }
         return false;
     }
 
     @Override
-    public Optional<Book> getBookById(UUID uuid) {
+    public Optional<BookDTO> getBookById(UUID uuid) {
+        Optional<Book> bookOptional = bookRepository.findById(uuid);
 
-        return Optional.of(bookRepository.findById(uuid)).orElse(null);
+        if (bookOptional.isPresent()){
+            return Optional.of(bookMapper.bookToBookDTO(bookOptional.get()));
+        }
+        return Optional.empty();
     }
+
 }

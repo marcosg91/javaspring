@@ -1,21 +1,23 @@
+//BookService.java
+
 package com.info.librosprimeraapp.service.book;
 
 import com.info.librosprimeraapp.domain.Book;
+import com.info.librosprimeraapp.exceptions.NotFoundException;
+import com.info.librosprimeraapp.model.dto.book.BookDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface BookService {
-    List<Book> getAllBooks();
+    List<BookDTO> getAllBooks();
 
-    Book createBook(Book book);
+    Book createBook(BookDTO book) throws NotFoundException;
 
-    Optional<Book> findBookByTitle(String title);
+    Optional<BookDTO> updateBook(UUID uuidBook, BookDTO bookUpdated);
 
-    Optional<Book> updateBook(UUID uuidBook, Book bookUpdated);
+    boolean deleteBook(UUID uuidBook);
 
-    boolean deleteBookByName(String title);
-
-    Optional<Book> getBookById(UUID uuid);
+    Optional<BookDTO> getBookById(UUID uuid);
 }

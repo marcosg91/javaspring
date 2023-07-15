@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 import java.util.UUID;
-
+/*
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -55,3 +55,4 @@ public class BootstrapData implements CommandLineRunner {
         }
     }
 }
+*/

@@ -1,24 +1,26 @@
 // AuthorService.java
+
 package com.info.librosprimeraapp.service.author;
 
 import com.info.librosprimeraapp.domain.Author;
+import com.info.librosprimeraapp.model.dto.author.AuthorDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface AuthorService {
-    List<Author> getAllAuthors();
 
-    Author createAuthor(Author author);
+    Author createAuthor(AuthorDTO author);
 
-    Optional<Author> findAuthorById(UUID authorId);
+    boolean deleteAuthor(UUID uuid);
 
-    Optional<Author> findAuthorByNombreAndApellido(String nombre, String apellido);
+    Optional<Author> updateAuthor(UUID uuid, AuthorDTO authorUpdated);
 
-    Optional<Author> findAuthorByNombreAndApellido(String fullName);
+    Optional<AuthorDTO> getAuthorById(UUID uuid);
 
-    Optional<Author> updateAuthor(UUID authorId, Author author);
+    Optional<AuthorDTO> getAuthorByNameAndSurname(String name, String surname);
 
-    boolean deleteAuthor(UUID authorId);
+    List<AuthorDTO> getAllAuthors();
+
 }

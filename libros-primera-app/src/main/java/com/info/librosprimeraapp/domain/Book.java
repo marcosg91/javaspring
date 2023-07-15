@@ -1,9 +1,8 @@
+//Book.java
+
 package com.info.librosprimeraapp.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -16,29 +15,32 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder //se encarga de la construccion del objeto, muy importante en spring
-
+@Builder
 public class Book {
+
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator" )
-    @JdbcTypeCode((SqlTypes.CHAR))
-
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @GenericGenerator(name="UUID",strategy="org.hibernate.id.UUIDGenerator")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(length = 36,columnDefinition = "varchar(36)",updatable = false,nullable = false)
     private UUID uuid;
 
-    @Column(length = 100, columnDefinition = "varchar(100)", updatable = true, nullable = false)
+    @Column(length = 100,columnDefinition = "varchar(100)",updatable = true,nullable = false)
     private String title;
 
-    @Column(length = 100, columnDefinition = "varchar(100)",updatable = true, nullable = false)
-    private String author;
+    @ManyToOne
+    private Author author;
 
-    @Column(unique = true) //para que no pueda haber libros con el mismo isbn
+    @Column(unique = true)
     private String isbn;
 
-    private int numberPage;
+    private int numberPages;
 
-    //devuelve en pantalla el objeto construido
+    public void setAuthor(Author author) {
+        this.author = author;
+        author.getBooks().add(this);
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -46,8 +48,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +
-                ", numberPage=" + numberPage +
+                ", numberPages=" + numberPages +
                 '}';
     }
 }
-

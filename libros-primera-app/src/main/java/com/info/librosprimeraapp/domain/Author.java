@@ -2,29 +2,38 @@
 package com.info.librosprimeraapp.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
+@Setter
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "authors")
+@Builder
 public class Author {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name="UUID",strategy="org.hibernate.id.UUIDGenerator")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(length = 36,columnDefinition = "varchar(36)",updatable = false,nullable = false)
+    private UUID uuid;
 
-    @Column(nullable = false)
-    private String nombre;
+    @Column(length = 50,columnDefinition = "varchar(50)",updatable = true,nullable = false)
+    private String name;
 
-    @Column(nullable = false)
-    private String apellido;
+    @Column(length = 50,columnDefinition = "varchar(50)",updatable = true,nullable = false)
+    private String surname;
 
-    @Column(name = "fecha_nacimiento", nullable = false) // Actualización del nombre de la columna
-    private LocalDate fechaDeNacimiento;
+    private LocalDateTime dateOfBirth;
+
+    @OneToMany(mappedBy = "author")
+    private List<Book> books = new ArrayList<>();
 }

@@ -1,8 +1,14 @@
 // AuthorController.java
+
 package com.info.librosprimeraapp.controller;
 
 import com.info.librosprimeraapp.domain.Author;
+import com.info.librosprimeraapp.exceptions.NotFoundException;
+import com.info.librosprimeraapp.model.dto.author.AuthorDTO;
 import com.info.librosprimeraapp.service.author.AuthorService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,46 +18,60 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/authors")
+@RequestMapping("/api/v1/author")
+@RequiredArgsConstructor
+@Slf4j
 public class AuthorController {
     private final AuthorService authorService;
 
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
+    @PostMapping()
+    public ResponseEntity createAuthor(@RequestBody AuthorDTO authorDTO){
+        log.info("Creacion de un nuevo Autor");
+        Author authorCreated = authorService.createAuthor(authorDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location","/api/v1/author/"+ authorCreated.getUuid());
+
+        return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        Author createdAuthor = authorService.createAuthor(author);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
+    @PutMapping("/{idAuthor}")
+    public ResponseEntity updateAuthor(@PathVariable(value = "idAuthor") UUID idAuthor,@RequestBody AuthorDTO authorUpdated)
+            throws NotFoundException {
+        Optional<Author> book = authorService.updateAuthor(idAuthor,authorUpdated);
+
+        if(book.isEmpty()){
+            log.warn("Autor no encontrado");
+            throw new NotFoundException();
+        }else {
+            log.info("Autor actualizado");
+            return  new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
     }
 
-    @GetMapping("/{authorId}")
-    public ResponseEntity<?> findAuthorById(@PathVariable UUID authorId) {
-        Optional<Author> author = authorService.findAuthorById(authorId);
-        return author.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @DeleteMapping("/{idAuthor}")
+    public ResponseEntity deleteAuthor(@PathVariable(value = "idAuthor")UUID idAuthor) throws NotFoundException{
+        boolean isDeletedAuthor = authorService.deleteAuthor(idAuthor);
+
+        if (isDeletedAuthor){
+            log.warn("Autor eliminado");
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        }else {
+            log.info("Autor no encontrado");
+            throw new NotFoundException();
+        }
     }
 
-    @GetMapping
-    public List<Author> getAllAuthors() {
+    @GetMapping()
+    public List<AuthorDTO> getAllAuthors(){
+        log.info("Se esta haciendo una consulta por los autores");
         return authorService.getAllAuthors();
     }
 
-    @PutMapping("/{authorId}")
-    public ResponseEntity<Author> updateAuthor(@PathVariable UUID authorId, @RequestBody Author author) {
-        Optional<Author> updatedAuthor = authorService.updateAuthor(authorId, author);
-        return updatedAuthor.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{idAuthor}")
+    public AuthorDTO getAuthorById(@PathVariable(value = "idAuthor") UUID idAuthor) throws NotFoundException{
+        return authorService.getAuthorById(idAuthor).orElseThrow(NotFoundException::new);
     }
 
-    @DeleteMapping("/{authorId}")
-    public ResponseEntity<String> deleteAuthor(@PathVariable UUID authorId) {
-        boolean deleted = authorService.deleteAuthor(authorId);
-        if (deleted) {
-            return ResponseEntity.ok("Author deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
-        }
-    }
 }
